@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<canvas id="checkers" width="500" height="500" style="border: 10px solid #846E5F;"></canvas>
+
+<script>
+
+    var game = new Game();
+    game.init();
+    game.start();
+
+    function Game() {
+        this.canvas = document.getElementById("checkers");
+        this.ctx = this.canvas.getContext("2d");
+
+        this.init = function(){
+            this.shapes = new Shapes(this.ctx);
+            this.board = new Board(this.shapes);
+        };
+
+        this.start = function(){
+            this.board.render();
+        }
+
+    }
+
+
+    function Board(shapes) {
+        this.shapes = shapes;
+        this.cellWidth = 50;
+        this.cellHeight = 50;
+        this.checker = null;
+        this.player1 = new Player();
+        this.player2  = new Player();
+
+        this.col = 10;
+        this.row = 10;
+
+        this.render = function () {
+            var darkCell = '#C56E3D';
+            var lightCell = '#F0E2CA';
+
+            for (var i = 0; i < this.col; i++) {
+                for (var j = 0; j < this.row; j++) {
+                    if (j % 2 == 0) {
+                        if (i % 2 != 0) {
+                            this.shapes.rect(this.cellWidth * j, this.cellHeight * i, this.cellWidth, this.cellHeight, darkCell);
+                            this.checker = new Checker(this.cellWidth * j, this.cellHeight * i, 'white', shapes);
+                            this.checker.render();
+                        } else {
+                            this.shapes.rect(this.cellWidth * j, this.cellHeight * i, this.cellWidth, this.cellHeight, lightCell);
+                        }
+                    } else {
+                        if (i % 2 == 0) {
+                            this.shapes.rect(this.cellWidth * j, this.cellHeight * i, this.cellWidth, this.cellHeight, darkCell);
+                            this.checker = new Checker(this.cellWidth * j, this.cellHeight * i, 'white', shapes);
+                            this.checker.render();
+                        } else {
+                            this.shapes.rect(this.cellWidth * j, this.cellHeight * i, this.cellWidth, this.cellHeight, lightCell);
+                        }
+                    }
+                }
+            }
+        };
+    }
+
+    function Player(checkersList){
+        this.checkersList = checkersList;
+    }
+
+    function Checker(posX, posY, color, shapes) {
+        this.radius = 25;
+        this.x = posX + this.radius;
+        this.y = posY + this.radius;
+        this.color = color;
+        this.shapes = shapes;
+
+        this.render = function () {
+            this.shapes.circle(this.x, this.y, this.radius, this.color);
+        }
+    }
+
+    function Shapes(ctx) {
+        this.ctx = ctx;
+
+        this.rect = function (posX, posY, width, height, color) {
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(posX, posY, width, height);
+        };
+
+        this.circle = function (posX, posY, radius, color) {
+            this.ctx.fillStyle = color;
+            this.ctx.beginPath();
+            this.ctx.arc(posX, posY, radius, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+    }
+
+</script>
+</body>
+</html>
